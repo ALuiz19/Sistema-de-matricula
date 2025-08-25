@@ -3,12 +3,21 @@ package models;
 import java.util.ArrayList;
 
 public class Aluno implements Usuario {
+    
     private String nome;
     private String login;
     private String senha;
-
-    private long numMatricula;
     private ArrayList<Matricula> matriculas;
+    private long numMatricula;
+
+    public Aluno(String nome, String login, String senha, long numMatricula, ArrayList<Matricula> matriculas) {
+        this.nome = nome;
+        this.login = login;
+        this.senha = senha;
+        this.numMatricula = numMatricula;
+        this.matriculas = matriculas;
+    }
+
 
     public String getNome() {
         return nome;

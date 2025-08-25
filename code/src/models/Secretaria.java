@@ -1,6 +1,7 @@
 package models;
 
 public class Secretaria implements Usuario {
+
     private String nome;
     private String senha;
     private String login;
@@ -11,6 +12,11 @@ public class Secretaria implements Usuario {
         this.login = login;
     }
 
+    
+    public Curriculo geraCurriculo() {
+        // TODO: implementar regra para gerar Curriculo
+        return null;
+    }
 
     @Override
     public String getNome() {
@@ -42,9 +48,4 @@ public class Secretaria implements Usuario {
         this.login = login;
     }
 
-    // Método específico do UML
-    public Curriculo geraCurriculo() {
-        // TODO: implementar regra para gerar Curriculo
-        return null;
-    }
 }

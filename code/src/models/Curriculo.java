@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Curriculo {
+
     private Date dataInicio;
     private Date dataFim;
     private ArrayList<Aluno> alunos;
@@ -18,6 +19,7 @@ public class Curriculo {
         this.disciplinas = new ArrayList<>();
     }
 
+    
     public void addAluno(Aluno aluno) {
         // TODO: implementar
     }

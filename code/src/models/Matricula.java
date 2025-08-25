@@ -15,6 +15,7 @@ public class Matricula {
         this.status = StatusMatricula.EFETIVADA;
     }
 
+    
     public Matricula criarMatricula(Aluno aluno, ArrayList<Disciplina> disciplinas) {
         // TODO: implementar
         return null;

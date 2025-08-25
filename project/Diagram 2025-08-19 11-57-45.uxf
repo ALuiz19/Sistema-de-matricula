@@ -1,47 +1,47 @@
-<diagram program="umletino" version="15.1"><zoom_level>11</zoom_level><help_text>Space for diagram notes#Operation(i: int): int
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes#Operation(i: int): int
 /+AbstractOperation()/
 --
 Responsibilities
 -- Resp1
-*-- Resp2*</help_text><element><id>UMLClass</id><coordinates><x>583</x><y>44</y><w>231</w><h>110</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+*-- Resp2*</help_text><element><id>UMLClass</id><coordinates><x>360</x><y>390</y><w>210</w><h>100</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
 Usuario
 --
 nome: String
 senha: String
 login: String
 --
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>264</x><y>286</y><w>363</w><h>99</h></coordinates><panel_attributes>Professor
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>70</x><y>610</y><w>330</w><h>90</h></coordinates><panel_attributes>Professor
 --
 numCadastro: long
 disciplinas: arrayList &lt; Disciplina &gt;
 --
-vizualizaAlunos( disciplina : Disciplina ) : arrayList &lt;Aluno&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>660</x><y>286</y><w>231</w><h>99</h></coordinates><panel_attributes>Aluno
+vizualizaAlunos( disciplina : Disciplina ) : arrayList &lt;Aluno&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>610</y><w>210</w><h>90</h></coordinates><panel_attributes>Aluno
 --
 numMatricula: long
 matriculas: arrayList &lt;Matricula&gt;
 --
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>935</x><y>55</y><w>231</w><h>99</h></coordinates><panel_attributes>Secreatria
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>680</x><y>400</y><w>210</w><h>90</h></coordinates><panel_attributes>Secreatria
 --
 
 --
-geraCurriculo() : Curriculo</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>528</x><y>550</y><w>231</w><h>187</h></coordinates><panel_attributes>Disciplina
+geraCurriculo() : Curriculo</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>310</x><y>850</y><w>210</w><h>170</h></coordinates><panel_attributes>Disciplina
 --
 nome: String
 obrigatorio: boolean
 status: StatusDisciplina
 alunos: arraylist &lt;Alunos&gt;
-numMaxAlunos: Int = 60
-numMinAlunos: Int = 3
+_numMaxAlunos: Int = 60_
+_numMinAlunos: Int = 3_
 --
 encerraPeriodoMatricula() : void
 addAluno( aluno : Aluno ) : void
-removeAluno( aluno : Aluno ) : void </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>594</x><y>143</y><w>33</w><h>165</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;130</additional_attributes></element><element><id>Relation</id><coordinates><x>803</x><y>110</y><w>154</w><h>33</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;120;10</additional_attributes></element><element><id>Relation</id><coordinates><x>715</x><y>143</y><w>33</w><h>165</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;130</additional_attributes></element><element><id>UMLClass</id><coordinates><x>187</x><y>550</y><w>231</w><h>99</h></coordinates><panel_attributes>Curso
+removeAluno( aluno : Aluno ) : void </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>370</x><y>480</y><w>30</w><h>150</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;130</additional_attributes></element><element><id>Relation</id><coordinates><x>560</x><y>450</y><w>140</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;120;10</additional_attributes></element><element><id>Relation</id><coordinates><x>480</x><y>480</y><w>30</w><h>150</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;130</additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>850</y><w>210</w><h>90</h></coordinates><panel_attributes>Curso
 --
 nome: String
 creditos: Int
 disciplinas : arraylist &lt; Disciplina &gt;
 --
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>407</x><y>583</y><w>143</w><h>33</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;110;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>847</x><y>550</y><w>484</w><h>154</h></coordinates><panel_attributes>Matricula
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>200</x><y>880</y><w>130</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;110;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>600</x><y>850</y><w>440</w><h>140</h></coordinates><panel_attributes>Matricula
 --
 disciplinas : arrayList &lt; Disciplina &gt;
 aluno : Aluno
@@ -50,7 +50,7 @@ status: StatusMatricula
 criarMatricula(aluno : Aluno, disciplinas : arrayLista &lt;Disciplina&gt; ) : Matricula
 cancelarMatricula( matricula: Matricula ) : void
 periodoMatriculaÁtivo() : boolean
-notificarCobranca() : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>968</x><y>264</y><w>308</w><h>176</h></coordinates><panel_attributes>Curriculo
+notificarCobranca() : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>710</x><y>590</y><w>280</w><h>160</h></coordinates><panel_attributes>Curriculo
 --
 dataInicio: Date
 dataFim: Date
@@ -60,29 +60,29 @@ disciplinas : arraylist &lt; Disciplina &gt;
 --
 addAluno( aluno : Aluno ) : void
 addProfessor( professor : Professor ) : void
-addDiscipliana( disciplina : Disciplina ) : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>528</x><y>814</y><w>231</w><h>99</h></coordinates><panel_attributes>&lt;&lt;Enum&gt;&gt;
+addDiscipliana( disciplina : Disciplina ) : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>310</x><y>1090</y><w>210</w><h>90</h></coordinates><panel_attributes>&lt;&lt;Enum&gt;&gt;
 StatusDisciplina
 --
 ATIVA,
 INATIVA,
 AGUARDANDO
 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>627</x><y>726</y><w>33</w><h>110</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;80;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>550</x><y>374</y><w>44</w><h>198</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>400</x><y>1010</y><w>30</w><h>100</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;80;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>330</x><y>690</y><w>40</w><h>180</h></coordinates><panel_attributes>lt=-
 m1=n
 m2=1
  &gt;
-</panel_attributes><additional_attributes>10;160;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>847</x><y>374</y><w>44</w><h>198</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>10;160;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>600</x><y>690</y><w>40</w><h>180</h></coordinates><panel_attributes>lt=-
 m1=n
 m2=1
- &gt;</panel_attributes><additional_attributes>10;160;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>704</x><y>374</y><w>55</w><h>198</h></coordinates><panel_attributes>lt=-
+ &gt;</panel_attributes><additional_attributes>10;160;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>470</x><y>690</y><w>50</w><h>180</h></coordinates><panel_attributes>lt=-
 m1=n
 m2=N=n
- &gt;</panel_attributes><additional_attributes>10;160;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>748</x><y>572</y><w>121</w><h>55</h></coordinates><panel_attributes>lt=-
+ &gt;</panel_attributes><additional_attributes>10;160;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>510</x><y>870</y><w>110</w><h>50</h></coordinates><panel_attributes>lt=-
 m1=n
 m2=n
- &gt;</panel_attributes><additional_attributes>10;20;90;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>847</x><y>770</y><w>231</w><h>99</h></coordinates><panel_attributes>&lt;&lt;Enum&gt;&gt;
+ &gt;</panel_attributes><additional_attributes>10;20;90;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>600</x><y>1050</y><w>210</w><h>90</h></coordinates><panel_attributes>&lt;&lt;Enum&gt;&gt;
 StatusMatricula
 --
 CONCLUIDA,
 EFETIVADA,
-CANCELADA</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>946</x><y>693</y><w>33</w><h>99</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element></diagram>
+CANCELADA</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>690</x><y>980</y><w>30</w><h>90</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element></diagram>

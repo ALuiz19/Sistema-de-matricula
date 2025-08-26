@@ -21,15 +21,21 @@ public class Curriculo {
 
     
     public void addAluno(Aluno aluno) {
-        // TODO: implementar
+        if (aluno != null && !alunos.contains(aluno)) {
+            alunos.add(aluno);
+        }
     }
 
     public void addProfessor(Professor professor) {
-        // TODO: implementar
+        if (professor != null && !professores.contains(professor)) {
+            professores.add(professor);
+        }
     }
 
     public void addDisciplina(Disciplina disciplina) {
-        // TODO: implementar
+        if (disciplina != null && !disciplinas.contains(disciplina)) {
+            disciplinas.add(disciplina);
+        }
     }
 
     public Date getDataInicio() {

@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import models.enums.StatusDisciplina;
 
 public class Disciplina {
-    
+
+    private static int numMaxAlunos = 60;
+    private static int numMinAlunos = 3;
+
     private String nome;
     private boolean obrigatorio;
     private StatusDisciplina status;
     private ArrayList<Aluno> alunos;
-    private static int numMaxAlunos = 60;
-    private static int numMinAlunos = 3;
+    private int creditos;
 
     public Disciplina(String nome, boolean obrigatorio, StatusDisciplina status, ArrayList<Aluno> alunos) {
         this.nome = nome;
@@ -18,7 +20,6 @@ public class Disciplina {
         this.status = status;
         this.alunos = alunos;
     }
-
 
     public void encerraPeriodoMatricula() {
         // TODO: implementar
@@ -70,6 +71,14 @@ public class Disciplina {
 
     public int getNumMinAlunos() {
         return numMinAlunos;
+    }
+
+    public int getCreditos() {
+        return creditos;
+    }
+
+    public void setCreditos(int creditos) {
+        this.creditos = creditos;
     }
 
 }

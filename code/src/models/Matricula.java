@@ -6,11 +6,9 @@ import models.enums.StatusMatricula;
 public class Matricula {
 
     private ArrayList<Disciplina> disciplinas;
-    private Aluno aluno;
     private StatusMatricula status;
 
     public Matricula(Aluno aluno, ArrayList<Disciplina> disciplinas) {
-        this.aluno = aluno;
         this.disciplinas = disciplinas;
         this.status = StatusMatricula.EFETIVADA;
     }
@@ -40,14 +38,6 @@ public class Matricula {
 
     public void setDisciplinas(ArrayList<Disciplina> disciplinas) {
         this.disciplinas = disciplinas;
-    }
-
-    public Aluno getAluno() {
-        return aluno;
-    }
-
-    public void setAluno(Aluno aluno) {
-        this.aluno = aluno;
     }
 
     public StatusMatricula getStatus() {

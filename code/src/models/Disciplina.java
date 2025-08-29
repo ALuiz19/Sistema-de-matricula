@@ -17,20 +17,32 @@ public class Disciplina {
     public Disciplina(String nome, boolean obrigatorio, StatusDisciplina status, ArrayList<Aluno> alunos) {
         this.nome = nome;
         this.obrigatorio = obrigatorio;
-        this.status = status;
+        this.status = StatusDisciplina.AGUARDANDO;
         this.alunos = alunos;
     }
 
     public void encerraPeriodoMatricula() {
-        // TODO: implementar
+        if (alunos.size() >= 3 && alunos.size() <= 60) {
+            status = StatusDisciplina.ATIVA;
+        } else {
+            status = StatusDisciplina.INATIVA;
+        }
     }
 
     public void addAluno(Aluno aluno) {
-        // TODO: implementar
+        if (alunos.size() < 60) {
+            alunos.add(aluno);
+        } else {
+            throw new ArrayIndexOutOfBoundsException("Quantidade de alunos completa.");
+        }
     }
 
     public void removeAluno(Aluno aluno) {
-        // TODO: implementar
+        if (alunos.contains(aluno)) {
+            alunos.remove(aluno);
+        } else {
+            throw new ArrayIndexOutOfBoundsException("Este aluno não está matriculado nessa disciplina.");
+        }
     }
 
     public String getNome() {
@@ -61,9 +73,9 @@ public class Disciplina {
         return alunos;
     }
 
-    public void setAlunos(ArrayList<Aluno> alunos) {
-        this.alunos = alunos;
-    }
+    // public void setAlunos(ArrayList<Aluno> alunos) {
+    // this.alunos = alunos;
+    // }
 
     public int getNumMaxAlunos() {
         return numMaxAlunos;

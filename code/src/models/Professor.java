@@ -18,10 +18,8 @@ public class Professor implements Usuario {
         this.disciplinas = disciplinas;
     }
 
-    
     public ArrayList<Aluno> vizualizaAlunos(Disciplina disciplina) {
-        // TODO: implementar
-        return null;
+        return disciplina.getAlunos();
     }
 
     public String getNome() {
@@ -60,8 +58,20 @@ public class Professor implements Usuario {
         return disciplinas;
     }
 
-    public void setDisciplinas(ArrayList<Disciplina> disciplinas) {
-        this.disciplinas = disciplinas;
+    public void addDiscplina(Disciplina disciplina) {
+        if (!disciplinas.contains(disciplina)) {
+            disciplinas.add(disciplina);
+        }
     }
+
+    public void removeDisciplina(Disciplina disciplina) {
+        if (disciplinas.contains(disciplina)) {
+            disciplinas.remove(disciplina);
+        }
+    }
+
+    // public void setDisciplinas(ArrayList<Disciplina> disciplinas) {
+    // this.disciplinas = disciplinas;
+    // }
 
 }

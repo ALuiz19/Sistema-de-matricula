@@ -1,6 +1,7 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Curso {
 
@@ -14,13 +15,25 @@ public class Curso {
         this.disciplinas = new ArrayList<>();
     }
 
-    
-    public void addDisciplina(Disciplina disciplina) {
-        // TODO: implementar
+    public void addDiscplina(Disciplina disciplina) {
+        Objects.requireNonNull(disciplina, "Disciplina não pode ser nula");
+
+        if (disciplinas.contains(disciplina)) {
+            throw new IllegalStateException("Disciplina já existente neste curso.");
+        }
+
+        disciplinas.add(disciplina);
     }
 
     public void removeDisciplina(Disciplina disciplina) {
-        // TODO: implementar
+        Objects.requireNonNull(disciplina, "Disciplina não pode ser nula");
+
+        if (!disciplinas.contains(disciplina)) {
+            throw new IllegalStateException("Disciplina não existente neste curso.");
+        }
+
+        disciplinas.remove(disciplina);
+
     }
 
     public String getNome() {

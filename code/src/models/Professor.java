@@ -69,9 +69,4 @@ public class Professor implements Usuario {
             disciplinas.remove(disciplina);
         }
     }
-
-    // public void setDisciplinas(ArrayList<Disciplina> disciplinas) {
-    // this.disciplinas = disciplinas;
-    // }
-
 }

@@ -1,12 +1,14 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Objects;
+
 import models.enums.StatusDisciplina;
 
 public class Disciplina {
 
-    private static int numMaxAlunos = 60;
-    private static int numMinAlunos = 3;
+    private static final int MAX_ALUNOS = 60;
+    private static final int MIN_ALUNOS = 3;
 
     private String nome;
     private boolean obrigatorio;
@@ -22,7 +24,7 @@ public class Disciplina {
     }
 
     public void encerraPeriodoMatricula() {
-        if (alunos.size() >= 3 && alunos.size() <= 60) {
+        if (alunos.size() >= MIN_ALUNOS && alunos.size() <= MAX_ALUNOS) {
             status = StatusDisciplina.ATIVA;
         } else {
             status = StatusDisciplina.INATIVA;
@@ -30,19 +32,31 @@ public class Disciplina {
     }
 
     public void addAluno(Aluno aluno) {
-        if (alunos.size() < 60) {
-            alunos.add(aluno);
-        } else {
-            throw new ArrayIndexOutOfBoundsException("Quantidade de alunos completa.");
+        Objects.requireNonNull(aluno, "Aluno não pode ser nulo");
+
+        if (alunos.size() >= 60) {
+            throw new IllegalStateException("Quantidade máxima de alunos atingida.");
         }
+
+        if (alunos.contains(aluno)) {
+            throw new IllegalStateException("Aluno já matriculado nessa disciplina.");
+        }
+
+        alunos.add(aluno);
     }
 
     public void removeAluno(Aluno aluno) {
-        if (alunos.contains(aluno)) {
-            alunos.remove(aluno);
-        } else {
-            throw new ArrayIndexOutOfBoundsException("Este aluno não está matriculado nessa disciplina.");
+        Objects.requireNonNull(aluno, "Aluno não pode ser nulo");
+
+        if (!alunos.contains(aluno)) {
+            throw new IllegalStateException("Aluno não matriculado nessa disciplina.");
         }
+
+        alunos.remove(aluno);
+    }
+
+    public ArrayList<Aluno> getAlunos() {
+        return alunos;
     }
 
     public String getNome() {
@@ -67,22 +81,6 @@ public class Disciplina {
 
     public void setStatus(StatusDisciplina status) {
         this.status = status;
-    }
-
-    public ArrayList<Aluno> getAlunos() {
-        return alunos;
-    }
-
-    // public void setAlunos(ArrayList<Aluno> alunos) {
-    // this.alunos = alunos;
-    // }
-
-    public int getNumMaxAlunos() {
-        return numMaxAlunos;
-    }
-
-    public int getNumMinAlunos() {
-        return numMinAlunos;
     }
 
     public int getCreditos() {

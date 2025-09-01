@@ -1,18 +1,18 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
-
 import models.enums.StatusDisciplina;
 
-public class Disciplina {
+public class Disciplina implements Serializable {
 
     private static final int MAX_ALUNOS = 60;
     private static final int MIN_ALUNOS = 3;
 
     private String nome;
     private boolean obrigatorio;
-    private StatusDisciplina status = StatusDisciplina.AGUARDANDO;;
+    private StatusDisciplina status = StatusDisciplina.AGUARDANDO;
     private ArrayList<Aluno> alunos = new ArrayList<>();
 
     public Disciplina(String nome, boolean ehObrigatorio) {
@@ -21,20 +21,20 @@ public class Disciplina {
     }
 
     public String encerraPeriodoMatricula() {
-        if (alunos.size() >= MIN_ALUNOS && alunos.size() <= MAX_ALUNOS) {
+        if (alunos.size() >= MIN_ALUNOS) {
             status = StatusDisciplina.ATIVA;
-            return "Disciplina Ativa";
+            return "Ativa com " + alunos.size() + " alunos.";
         } else {
             status = StatusDisciplina.INATIVA;
-            return "Disciplina Inativa";
+            return "Cancelada por falta de alunos (Inscritos: " + alunos.size() + ").";
         }
     }
 
     public void addAluno(Aluno aluno) {
         Objects.requireNonNull(aluno, "Aluno não pode ser nulo");
 
-        if (alunos.size() >= 60) {
-            throw new IllegalStateException("Quantidade máxima de alunos atingida.");
+        if (alunos.size() >= MAX_ALUNOS) {
+            throw new IllegalStateException("Quantidade máxima de alunos atingida ("+ MAX_ALUNOS +").");
         }
 
         if (alunos.contains(aluno)) {
@@ -80,5 +80,18 @@ public class Disciplina {
 
     public void setStatus(StatusDisciplina status) {
         this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Disciplina that = (Disciplina) o;
+        return nome.equals(that.nome);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nome);
     }
 }

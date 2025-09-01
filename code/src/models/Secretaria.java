@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Date;
+
 public class Secretaria implements Usuario {
 
     private String nome;
@@ -12,10 +14,15 @@ public class Secretaria implements Usuario {
         this.login = login;
     }
 
-    
-    public Curriculo geraCurriculo() {
-        // TODO: implementar regra para gerar Curriculo
-        return null;
+    /**
+     * Cria um novo currículo para um semestre.
+     * @param dataInicio A data de início do semestre.
+     * @param dataFim A data de fim do semestre.
+     * @return um novo objeto Curriculo.
+     */
+    public Curriculo geraCurriculo(Date dataInicio, Date dataFim) {
+        System.out.println("Gerando currículo para o novo semestre.");
+        return new Curriculo(dataInicio, dataFim);
     }
 
     @Override
@@ -48,4 +55,8 @@ public class Secretaria implements Usuario {
         this.login = login;
     }
 
+    @Override
+    public String toString() {
+        return "Secretaria: " + nome;
+    }
 }

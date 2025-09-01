@@ -15,28 +15,35 @@ public class Aluno implements Usuario {
         this.login = login;
         this.senha = senha;
         this.numMatricula = numMatricula;
+        this.matriculas = new ArrayList<>(); // Inicializa a lista
     }
 
+    @Override
     public String getNome() {
         return nome;
     }
 
+    @Override
     public void setNome(String nome) {
         this.nome = nome;
     }
 
+    @Override
     public String getLogin() {
         return login;
     }
 
+    @Override
     public void setLogin(String login) {
         this.login = login;
     }
 
+    @Override
     public String getSenha() {
         return senha;
     }
 
+    @Override
     public void setSenha(String senha) {
         this.senha = senha;
     }
@@ -54,6 +61,9 @@ public class Aluno implements Usuario {
     }
 
     public void addMatricula(Matricula m) {
+        if (this.matriculas == null) {
+            this.matriculas = new ArrayList<>();
+        }
         matriculas.add(m);
     }
 
@@ -65,6 +75,6 @@ public class Aluno implements Usuario {
 
     @Override
     public String toString() {
-        return nome + " (" + numMatricula + ")";
+        return "Aluno: " + nome + " (Matrícula: " + numMatricula + ")";
     }
 }

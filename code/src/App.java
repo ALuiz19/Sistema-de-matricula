@@ -1,108 +1,420 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 import models.Aluno;
 import models.Curso;
 import models.Disciplina;
+import models.Professor;
+import models.Secretaria;
+import models.Usuario;
 import models.Matricula;
+import dao.SistemaDAO;
 
 public class App {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    private static Scanner sc = new Scanner(System.in);
+    private static List<Usuario> usuarios = new ArrayList<>();
+    private static List<Curso> cursos = new ArrayList<>();
+    private static Matricula matriculaAtiva = null;
 
-        // Base de dados simples em memória
-        List<Aluno> alunos = new ArrayList<>();
-        List<Curso> cursos = new ArrayList<>();
+    public static void main(String[] args) {
+        carregarDados();
+
+        // Adiciona um usuário da secretaria como padrão se não houver nenhum
+        if (usuarios.stream().noneMatch(u -> u instanceof Secretaria)) {
+            usuarios.add(new Secretaria("admin", "admin", "admin"));
+        }
 
         while (true) {
-            System.out.println("\n==== MENU SISTEMA DE MATRÍCULAS ====");
-            System.out.println("1 - Cadastrar aluno");
-            System.out.println("2 - Criar curso");
-            System.out.println("3 - Adicionar disciplina a curso");
-            System.out.println("4 - Efetivar matrícula");
-            System.out.println("5 - Cancelar matrícula");
-            System.out.println("6 - Listar alunos");
-            System.out.println("0 - Sair");
-            System.out.print("Escolha: ");
+            System.out.println("\n==== BEM-VINDO AO SISTEMA DE MATRÍCULAS ====");
+            System.out.print("Login: ");
+            String login = sc.nextLine();
+            System.out.print("Senha: ");
+            String senha = sc.nextLine();
 
-            int opc = sc.nextInt();
-            sc.nextLine();
+            Usuario usuarioLogado = autenticarUsuario(login, senha);
 
-            switch (opc) {
-                case 1 -> {
-                    System.out.print("Login : ");
-                    String login = sc.nextLine();
-                    System.out.print("Senha: ");
-                    String senha = sc.nextLine();
-                    System.out.print("Nome: ");
-                    String nome = sc.nextLine();
-                    System.out.print("numMatricula: ");
-                    Long numMatricula = sc.nextLong();
-                    alunos.add(new Aluno(login,
-                            senha, nome, numMatricula));
+            if (usuarioLogado != null) {
+                System.out.println("Login bem-sucedido! Bem-vindo(a), " + usuarioLogado.getNome());
+                if (usuarioLogado instanceof Secretaria) {
+                    menuSecretaria((Secretaria) usuarioLogado);
+                } else if (usuarioLogado instanceof Aluno) {
+                    menuAluno((Aluno) usuarioLogado);
+                } else if (usuarioLogado instanceof Professor) {
+                    menuProfessor((Professor) usuarioLogado);
                 }
-                case 2 -> {
-                    System.out.print("Nome do curso: ");
-                    String nome = sc.nextLine();
-                    System.out.print("Créditos: ");
-                    int creditos = sc.nextInt();
-                    sc.nextLine();
-                    cursos.add(new Curso(nome, creditos));
-                }
-                case 3 -> {
-                    if (cursos.isEmpty()) {
-                        System.out.println("Nenhum curso cadastrado.");
-                        break;
-                    }
-                    System.out.println("Selecione curso:");
-                    for (int i = 0; i < cursos.size(); i++) {
-                        System.out.println(i + " - " + cursos.get(i));
-                    }
-                    int idxCurso = sc.nextInt();
-                    sc.nextLine();
-                    System.out.print("Nome da disciplina: ");
-                    String nomeDisciplina = sc.nextLine();
-                    System.out.print("Disciplina obrigatória ? (true or false) ");
-                    boolean ehObrigatorio = sc.nextBoolean();
-                    cursos.get(idxCurso).addDisciplina(new Disciplina(nomeDisciplina, ehObrigatorio));
-                }
-                case 4 -> {
-                    if (alunos.isEmpty() || cursos.isEmpty()) {
-                        System.out.println("Cadastre alunos e cursos antes.");
-                        break;
-                    }
-                    System.out.println("Selecione aluno:");
-                    for (int i = 0; i < alunos.size(); i++) {
-                        System.out.println(i + " - " + alunos.get(i));
-                    }
-                    int idxAluno = sc.nextInt();
-                    sc.nextLine();
-
-                    System.out.println("Selecione curso:");
-                    for (int i = 0; i < cursos.size(); i++) {
-                        System.out.println(i + " - " + cursos.get(i));
-                    }
-                    int idxCurso = sc.nextInt();
-                    sc.nextLine();
-
-                    Matricula m = new Matricula(alunos.get(idxAluno), cursos.get(idxCurso));
-                    alunos.get(idxAluno).addMatricula(m);
-                    m.ativarPeriodo();
-                    System.out.println("Matrícula efetuada: " + m);
-                }
-                case 5 -> {
-                    System.out.println("Cancelamento de matrícula ainda em construção.");
-                }
-                case 6 -> {
-                    for (Aluno a : alunos) {
-                        System.out.println(a);
-                    }
-                }
-                case 0 -> {
-                    System.out.println("Encerrando...");
-                    return;
-                }
-                default -> System.out.println("Opção inválida!");
+            } else {
+                System.out.println("Login ou senha inválidos.");
             }
         }
+    }
+
+    // Métodos de Menu
+    private static void menuSecretaria(Secretaria secretaria) {
+        while (true) {
+            System.out.println("\n==== MENU SECRETARIA ====");
+            System.out.println("1 - Gerenciar Alunos");
+            System.out.println("2 - Gerenciar Professores");
+            System.out.println("3 - Gerenciar Cursos e Disciplinas");
+            System.out.println("4 - Encerrar Período de Matrículas");
+            System.out.println("0 - Logout (Salvar e Sair)");
+
+            int opc = lerOpcao();
+
+            switch (opc) {
+                case 1:
+                    gerenciarAlunos();
+                    break;
+                case 2:
+                    gerenciarProfessores();
+                    break;
+                case 3:
+                    gerenciarCursosDisciplinas();
+                    break;
+                case 4:
+                    encerrarPeriodoMatriculas();
+                    break;
+                case 0:
+                    salvarDados();
+                    return;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        }
+    }
+
+    private static void menuAluno(Aluno aluno) {
+        // Verifica se o aluno já tem uma matrícula para o curso.
+        if (aluno.getMatriculas() == null || aluno.getMatriculas().isEmpty()) {
+             System.out.println("Você ainda não está matriculado em um curso. A secretaria precisa fazer isso.");
+             return;
+        }
+        matriculaAtiva = aluno.getMatriculas().get(0); // Simplificado para a primeira matrícula
+        matriculaAtiva.ativarPeriodo();
+
+        while (true) {
+            System.out.println("\n==== MENU ALUNO ====");
+            System.out.println("1 - Matricular-se em Disciplinas");
+            System.out.println("2 - Cancelar Matrícula em Disciplina");
+            System.out.println("3 - Ver Disciplinas Matriculadas");
+            System.out.println("0 - Logout (Salvar e Sair)");
+
+            int opc = lerOpcao();
+
+            switch (opc) {
+                case 1:
+                    matricularEmDisciplina(aluno);
+                    break;
+                case 2:
+                    cancelarMatriculaDisciplina(aluno);
+                    break;
+                case 3:
+                    verDisciplinasMatriculadas();
+                    break;
+                case 0:
+                    matriculaAtiva.encerrarPeriodo();
+                    salvarDados();
+                    return;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        }
+    }
+
+    private static void menuProfessor(Professor professor) {
+         while (true) {
+            System.out.println("\n==== MENU PROFESSOR ====");
+            System.out.println("1 - Ver Alunos por Disciplina");
+            System.out.println("0 - Logout");
+
+            int opc = lerOpcao();
+            switch (opc) {
+                case 1:
+                    visualizarAlunosPorDisciplina(professor);
+                    break;
+                case 0:
+                    return;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        }
+    }
+
+    // Funcionalidades da Secretaria
+    private static void gerenciarAlunos() {
+        System.out.println("1 - Cadastrar Aluno\n2 - Listar Alunos");
+        int opc = lerOpcao();
+        if (opc == 1) {
+            System.out.print("Nome do Aluno: ");
+            String nome = sc.nextLine();
+            System.out.print("Login: ");
+            String login = sc.nextLine();
+            System.out.print("Senha: ");
+            String senha = sc.nextLine();
+            System.out.print("Número de Matrícula: ");
+            long numMatricula = Long.parseLong(sc.nextLine());
+
+            Aluno novoAluno = new Aluno(nome, login, senha, numMatricula);
+            usuarios.add(novoAluno);
+            System.out.println("Aluno cadastrado com sucesso!");
+
+            System.out.println("Matricular aluno em um curso:");
+            listarCursos();
+            System.out.print("Escolha o número do curso: ");
+            int idxCurso = lerOpcao();
+            if(idxCurso >= 0 && idxCurso < cursos.size()){
+                Curso cursoEscolhido = cursos.get(idxCurso);
+                Matricula m = new Matricula(novoAluno, cursoEscolhido);
+                novoAluno.addMatricula(m);
+                System.out.println("Aluno matriculado no curso " + cursoEscolhido.getNome());
+            } else {
+                 System.out.println("Curso inválido.");
+            }
+
+
+        } else if (opc == 2) {
+            System.out.println("\n-- Lista de Alunos --");
+            usuarios.stream()
+                    .filter(u -> u instanceof Aluno)
+                    .forEach(u -> System.out.println(((Aluno) u).toString()));
+        }
+    }
+
+    private static void gerenciarProfessores() {
+        System.out.println("1 - Cadastrar Professor\n2 - Listar Professores");
+        int opc = lerOpcao();
+        if (opc == 1) {
+            System.out.print("Nome do Professor: ");
+            String nome = sc.nextLine();
+            System.out.print("Login: ");
+            String login = sc.nextLine();
+            System.out.print("Senha: ");
+            String senha = sc.nextLine();
+            System.out.print("Número de Cadastro: ");
+            long numCadastro = Long.parseLong(sc.nextLine());
+
+            usuarios.add(new Professor(nome, login, senha, numCadastro));
+            System.out.println("Professor cadastrado com sucesso!");
+        } else if (opc == 2) {
+            System.out.println("\n-- Lista de Professores --");
+            usuarios.stream()
+                    .filter(u -> u instanceof Professor)
+                    .forEach(u -> System.out.println(((Professor) u).toString()));
+        }
+    }
+
+    private static void gerenciarCursosDisciplinas() {
+        System.out.println("1 - Criar Curso\n2 - Adicionar Disciplina a Curso\n3 - Listar Cursos e Disciplinas");
+        int opc = lerOpcao();
+        if(opc == 1) {
+            System.out.print("Nome do curso: ");
+            String nome = sc.nextLine();
+            System.out.print("Créditos: ");
+            int creditos = Integer.parseInt(sc.nextLine());
+            cursos.add(new Curso(nome, creditos));
+            System.out.println("Curso criado com sucesso!");
+        } else if (opc == 2) {
+            listarCursos();
+            System.out.print("Escolha o número do curso: ");
+            int idxCurso = lerOpcao();
+            if (idxCurso >= 0 && idxCurso < cursos.size()) {
+                System.out.print("Nome da disciplina: ");
+                String nomeDisciplina = sc.nextLine();
+                System.out.print("A disciplina é obrigatória? (s/n): ");
+                boolean ehObrigatorio = sc.nextLine().equalsIgnoreCase("s");
+                cursos.get(idxCurso).addDisciplina(new Disciplina(nomeDisciplina, ehObrigatorio));
+                System.out.println("Disciplina adicionada!");
+            } else {
+                System.out.println("Curso inválido.");
+            }
+        } else if (opc == 3) {
+            listarCursosComDisciplinas();
+        }
+    }
+
+     private static void encerrarPeriodoMatriculas() {
+        System.out.println("Encerrando período de matrículas e validando disciplinas...");
+        for (Curso curso : cursos) {
+            for (Disciplina disciplina : curso.getDisciplinas()) {
+                String status = disciplina.encerraPeriodoMatricula();
+                System.out.println("Disciplina '" + disciplina.getNome() + "': " + status);
+            }
+        }
+        System.out.println("Período encerrado.");
+    }
+
+    // Funcionalidades do Aluno
+    private static void matricularEmDisciplina(Aluno aluno) {
+        System.out.println("\n-- Disciplinas Disponíveis --");
+        Curso cursoDoAluno = matriculaAtiva.getCurso();
+        ArrayList<Disciplina> disciplinasDisponiveis = cursoDoAluno.getDisciplinas();
+
+        for (int i = 0; i < disciplinasDisponiveis.size(); i++) {
+            Disciplina d = disciplinasDisponiveis.get(i);
+            System.out.println(i + " - " + d.getNome() + (d.isObrigatorio() ? " (Obrigatória)" : " (Optativa)") + " - Vagas: " + (60 - d.getAlunos().size()));
+        }
+
+        System.out.print("Escolha o número da disciplina para se matricular: ");
+        int idxDisciplina = lerOpcao();
+
+        if (idxDisciplina >= 0 && idxDisciplina < disciplinasDisponiveis.size()) {
+            Disciplina disciplinaEscolhida = disciplinasDisponiveis.get(idxDisciplina);
+            try {
+                matriculaAtiva.addDisciplina(disciplinaEscolhida);
+                System.out.println("Matrícula na disciplina '" + disciplinaEscolhida.getNome() + "' realizada com sucesso!");
+                 matriculaAtiva.notificarCobranca();
+            } catch (IllegalStateException e) {
+                System.out.println("Erro ao matricular: " + e.getMessage());
+            }
+        } else {
+            System.out.println("Disciplina inválida.");
+        }
+    }
+
+     private static void cancelarMatriculaDisciplina(Aluno aluno) {
+        System.out.println("\n-- Suas Disciplinas --");
+        List<Disciplina> disciplinasMatriculadas = matriculaAtiva.getDisciplinas();
+
+        if (disciplinasMatriculadas.isEmpty()) {
+            System.out.println("Você não está matriculado em nenhuma disciplina.");
+            return;
+        }
+
+        for (int i = 0; i < disciplinasMatriculadas.size(); i++) {
+            System.out.println(i + " - " + disciplinasMatriculadas.get(i).getNome());
+        }
+
+        System.out.print("Escolha o número da disciplina para cancelar a matrícula: ");
+        int idxDisciplina = lerOpcao();
+
+        if (idxDisciplina >= 0 && idxDisciplina < disciplinasMatriculadas.size()) {
+            Disciplina disciplinaEscolhida = disciplinasMatriculadas.get(idxDisciplina);
+            try {
+                matriculaAtiva.removeDisciplina(disciplinaEscolhida);
+                System.out.println("Matrícula na disciplina '" + disciplinaEscolhida.getNome() + "' cancelada.");
+            } catch (IllegalStateException e) {
+                System.out.println("Erro: " + e.getMessage());
+            }
+        } else {
+            System.out.println("Disciplina inválida.");
+        }
+    }
+
+     private static void verDisciplinasMatriculadas() {
+        System.out.println("\n-- Disciplinas Matriculadas --");
+        List<Disciplina> disciplinasMatriculadas = matriculaAtiva.getDisciplinas();
+        if (disciplinasMatriculadas.isEmpty()) {
+            System.out.println("Nenhuma disciplina matriculada.");
+        } else {
+            disciplinasMatriculadas.forEach(d -> System.out.println("- " + d.getNome()));
+        }
+    }
+
+
+    // Funcionalidades do Professor
+    private static void visualizarAlunosPorDisciplina(Professor professor) {
+        System.out.println("\n-- Suas Disciplinas --");
+        List<Disciplina> disciplinasProfessor = new ArrayList<>();
+        // Encontra as disciplinas do professor
+        for(Curso c : cursos){
+            for(Disciplina d : c.getDisciplinas()){
+                if(professor.getDisciplinas() != null && professor.getDisciplinas().contains(d)){
+                    disciplinasProfessor.add(d);
+                }
+            }
+        }
+        
+        if(disciplinasProfessor.isEmpty()){
+             System.out.println("Você não está lecionando em nenhuma disciplina.");
+             return;
+        }
+
+        for (int i = 0; i < disciplinasProfessor.size(); i++) {
+            System.out.println(i + " - " + disciplinasProfessor.get(i).getNome());
+        }
+
+        System.out.print("Escolha uma disciplina para ver os alunos: ");
+        int idx = lerOpcao();
+
+        if (idx >= 0 && idx < disciplinasProfessor.size()) {
+            Disciplina d = disciplinasProfessor.get(idx);
+            System.out.println("\n-- Alunos em " + d.getNome() + " --");
+            ArrayList<Aluno> alunos = professor.vizualizaAlunos(d);
+            if (alunos.isEmpty()) {
+                System.out.println("Nenhum aluno matriculado.");
+            } else {
+                alunos.forEach(aluno -> System.out.println("- " + aluno.getNome()));
+            }
+        } else {
+            System.out.println("Opção inválida.");
+        }
+    }
+
+
+    // Métodos Auxiliares
+    private static Usuario autenticarUsuario(String login, String senha) {
+        for (Usuario u : usuarios) {
+            if (u.getLogin().equals(login) && u.getSenha().equals(senha)) {
+                return u;
+            }
+        }
+        return null;
+    }
+    
+    private static int lerOpcao() {
+        int opc = -1;
+        try {
+            opc = Integer.parseInt(sc.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Por favor, insira um número válido.");
+            opc = -1;
+        }
+        return opc;
+    }
+
+    private static void listarCursos() {
+        if (cursos.isEmpty()) {
+            System.out.println("Nenhum curso cadastrado.");
+            return;
+        }
+        System.out.println("\n-- Lista de Cursos --");
+        for (int i = 0; i < cursos.size(); i++) {
+            System.out.println(i + " - " + cursos.get(i).getNome());
+        }
+    }
+
+    private static void listarCursosComDisciplinas() {
+        if (cursos.isEmpty()) {
+            System.out.println("Nenhum curso cadastrado.");
+            return;
+        }
+        System.out.println("\n-- Cursos e Disciplinas --");
+        for (Curso curso : cursos) {
+            System.out.println("Curso: " + curso.getNome());
+            if (curso.getDisciplinas().isEmpty()) {
+                System.out.println("  (Nenhuma disciplina cadastrada)");
+            } else {
+                for (Disciplina disciplina : curso.getDisciplinas()) {
+                    System.out.println("  - " + disciplina.getNome() + (disciplina.isObrigatorio() ? " (Obrigatória)" : " (Optativa)"));
+                }
+            }
+        }
+    }
+
+    // Persistência
+    private static void carregarDados() {
+        Object[] dados = SistemaDAO.carregarDados();
+        if (dados != null) {
+            usuarios = (List<Usuario>) dados[0];
+            cursos = (List<Curso>) dados[1];
+            System.out.println("Dados carregados com sucesso.");
+        } else {
+            System.out.println("Nenhum dado encontrado. Iniciando um novo sistema.");
+        }
+    }
+
+    private static void salvarDados() {
+        SistemaDAO.salvarDados(usuarios, cursos);
+        System.out.println("Dados salvos com sucesso. Encerrando.");
     }
 }

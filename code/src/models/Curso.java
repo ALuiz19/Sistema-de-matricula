@@ -1,9 +1,10 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Curso {
+public class Curso implements Serializable {
 
     private String nome;
     private int creditos;

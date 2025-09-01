@@ -15,7 +15,7 @@ public class Curso {
         this.disciplinas = new ArrayList<>();
     }
 
-    public void addDiscplina(Disciplina disciplina) {
+    public void addDisciplina(Disciplina disciplina) {
         Objects.requireNonNull(disciplina, "Disciplina não pode ser nula");
 
         if (disciplinas.contains(disciplina)) {
@@ -56,7 +56,8 @@ public class Curso {
         return disciplinas;
     }
 
-    public void setDisciplinas(ArrayList<Disciplina> disciplinas) {
-        this.disciplinas = disciplinas;
+    @Override
+    public String toString() {
+        return "Curso: " + nome + " (" + creditos + " créditos)";
     }
 }

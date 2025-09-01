@@ -3,21 +3,19 @@ package models;
 import java.util.ArrayList;
 
 public class Aluno implements Usuario {
-    
-    private String nome;
+
     private String login;
     private String senha;
-    private ArrayList<Matricula> matriculas;
+    private String nome;
     private long numMatricula;
+    private ArrayList<Matricula> matriculas;
 
-    public Aluno(String nome, String login, String senha, long numMatricula, ArrayList<Matricula> matriculas) {
+    public Aluno(String nome, String login, String senha, long numMatricula) {
         this.nome = nome;
         this.login = login;
         this.senha = senha;
         this.numMatricula = numMatricula;
-        this.matriculas = matriculas;
     }
-
 
     public String getNome() {
         return nome;
@@ -55,7 +53,18 @@ public class Aluno implements Usuario {
         return matriculas;
     }
 
-    public void setMatriculas(ArrayList<Matricula> matriculas) {
-        this.matriculas = matriculas;
+    public void addMatricula(Matricula m) {
+        matriculas.add(m);
+    }
+
+    public void cancelarMatricula(Matricula m) {
+        if (matriculas.contains(m)) {
+            m.cancelarMatricula();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return nome + " (" + numMatricula + ")";
     }
 }

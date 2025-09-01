@@ -12,22 +12,21 @@ public class Disciplina {
 
     private String nome;
     private boolean obrigatorio;
-    private StatusDisciplina status;
-    private ArrayList<Aluno> alunos;
-    private int creditos;
+    private StatusDisciplina status = StatusDisciplina.AGUARDANDO;;
+    private ArrayList<Aluno> alunos = new ArrayList<>();
 
-    public Disciplina(String nome, boolean obrigatorio, StatusDisciplina status, ArrayList<Aluno> alunos) {
+    public Disciplina(String nome, boolean ehObrigatorio) {
         this.nome = nome;
-        this.obrigatorio = obrigatorio;
-        this.status = StatusDisciplina.AGUARDANDO;
-        this.alunos = alunos;
+        this.obrigatorio = ehObrigatorio;
     }
 
-    public void encerraPeriodoMatricula() {
+    public String encerraPeriodoMatricula() {
         if (alunos.size() >= MIN_ALUNOS && alunos.size() <= MAX_ALUNOS) {
             status = StatusDisciplina.ATIVA;
+            return "Disciplina Ativa";
         } else {
             status = StatusDisciplina.INATIVA;
+            return "Disciplina Inativa";
         }
     }
 
@@ -82,13 +81,4 @@ public class Disciplina {
     public void setStatus(StatusDisciplina status) {
         this.status = status;
     }
-
-    public int getCreditos() {
-        return creditos;
-    }
-
-    public void setCreditos(int creditos) {
-        this.creditos = creditos;
-    }
-
 }

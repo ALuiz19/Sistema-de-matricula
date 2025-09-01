@@ -22,8 +22,8 @@ removeDisciplina( Disciplina disciplina ) : void</panel_attributes><additional_a
 numMatricula: long
 matriculas: arrayList &lt;Matricula&gt;
 --
-addMatricula(disciplinas : arrayLista &lt;Disciplina&gt; ) : void
-removeMatricula( matricula: Matricula ) : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>308</x><y>44</y><w>231</w><h>99</h></coordinates><panel_attributes>Secreatria
+addMatricula(matricula: Matricula ) : void
+cancelarMatricula( matricula: Matricula ) : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>242</x><y>44</y><w>231</w><h>99</h></coordinates><panel_attributes>Secreatria
 --
 
 --
@@ -38,18 +38,25 @@ _numMinAlunos: Int = 3_
 --
 encerraPeriodoMatricula() : void
 addAluno( aluno : Aluno ) : void
-removeAluno( aluno : Aluno ) : void </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>671</x><y>132</y><w>33</w><h>165</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;130</additional_attributes></element><element><id>Relation</id><coordinates><x>528</x><y>99</y><w>110</w><h>33</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>80;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>792</x><y>132</y><w>33</w><h>99</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>UMLClass</id><coordinates><x>99</x><y>539</y><w>297</w><h>176</h></coordinates><panel_attributes>Curso
+removeAluno( aluno : Aluno ) : void </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>671</x><y>132</y><w>33</w><h>165</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;130</additional_attributes></element><element><id>Relation</id><coordinates><x>462</x><y>99</y><w>176</w><h>33</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>140;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>792</x><y>132</y><w>33</w><h>99</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>UMLClass</id><coordinates><x>99</x><y>539</y><w>297</w><h>132</h></coordinates><panel_attributes>Curso
 --
 nome: String
 creditos: Int
 disciplinas : arraylist &lt; Disciplina &gt;
 --
 addDisciplina( Disciplina disciplina ) : void
-removeDisciplina( Disciplina disciplina ) : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>385</x><y>572</y><w>242</w><h>33</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;200;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>924</x><y>396</y><w>484</w><h>110</h></coordinates><panel_attributes>Matricula
+removeDisciplina( Disciplina disciplina ) : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>385</x><y>572</y><w>242</w><h>33</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;200;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>924</x><y>396</y><w>484</w><h>242</h></coordinates><panel_attributes>Matricula
 --
+aluno: Aluno
+curso: Curso
 disciplinas : arrayList &lt; Disciplina &gt;
 status: StatusMatricula
+periodoAtivo: boolean
 --
+addDisciplina( disciplina : Disciplina ): void
+cancelarMatricula() : void
+ativarPeriodo() : void
+encerraPeriodo() : void
 periodoMatriculaÁtivo() : boolean
 notificarCobranca() : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>275</y><w>308</w><h>176</h></coordinates><panel_attributes>Curriculo
 --
@@ -80,8 +87,11 @@ StatusMatricula
 --
 CONCLUIDA,
 EFETIVADA,
-CANCELADA</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1023</x><y>495</y><w>33</w><h>286</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;10;10;240</additional_attributes></element><element><id>Relation</id><coordinates><x>781</x><y>440</y><w>165</w><h>44</h></coordinates><panel_attributes>lt=.
+CANCELADA</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1023</x><y>627</y><w>33</w><h>154</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;10;10;120</additional_attributes></element><element><id>Relation</id><coordinates><x>781</x><y>440</y><w>165</w><h>44</h></coordinates><panel_attributes>lt=.
 </panel_attributes><additional_attributes>130;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>297</x><y>396</y><w>352</w><h>165</h></coordinates><panel_attributes>lt=-
 m1=1
 m2=n
-</panel_attributes><additional_attributes>10;20;290;20;290;130</additional_attributes></element></diagram>
+</panel_attributes><additional_attributes>10;20;290;20;290;130</additional_attributes></element><element><id>Relation</id><coordinates><x>264</x><y>132</y><w>55</w><h>165</h></coordinates><panel_attributes>lt=-
+m1=0, n
+m2=1
+ &gt;</panel_attributes><additional_attributes>10;130;10;10</additional_attributes></element></diagram>

@@ -1,7 +1,11 @@
 package models;
 
-public class Secretaria implements Usuario {
+import java.io.Serializable;
+import java.util.Date;
 
+public class Secretaria implements Usuario, Serializable {
+
+    private static final long serialVersionUID = 1L;
     private String nome;
     private String senha;
     private String login;
@@ -12,10 +16,8 @@ public class Secretaria implements Usuario {
         this.login = login;
     }
 
-    
     public Curriculo geraCurriculo() {
-        // TODO: implementar regra para gerar Curriculo
-        return null;
+        return new Curriculo(new Date(), new Date());
     }
 
     @Override
@@ -47,5 +49,4 @@ public class Secretaria implements Usuario {
     public void setLogin(String login) {
         this.login = login;
     }
-
 }

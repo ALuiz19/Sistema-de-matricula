@@ -1,9 +1,11 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Aluno implements Usuario {
-
+public class Aluno implements Usuario, Serializable {
+    
+    private static final long serialVersionUID = 1L; 
     private String login;
     private String senha;
     private String nome;
@@ -15,6 +17,7 @@ public class Aluno implements Usuario {
         this.login = login;
         this.senha = senha;
         this.numMatricula = numMatricula;
+        this.matriculas = new ArrayList<>();
     }
 
     public String getNome() {
@@ -54,6 +57,9 @@ public class Aluno implements Usuario {
     }
 
     public void addMatricula(Matricula m) {
+        if(this.matriculas == null) {
+            this.matriculas = new ArrayList<>();
+        }
         matriculas.add(m);
     }
 
@@ -65,6 +71,6 @@ public class Aluno implements Usuario {
 
     @Override
     public String toString() {
-        return nome + " (" + numMatricula + ")";
+        return "Aluno: " + nome + " (Matrícula: " + numMatricula + ")";
     }
 }

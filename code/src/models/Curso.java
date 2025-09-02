@@ -1,10 +1,12 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Curso {
+public class Curso implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private String nome;
     private int creditos;
     private ArrayList<Disciplina> disciplinas;
@@ -33,7 +35,6 @@ public class Curso {
         }
 
         disciplinas.remove(disciplina);
-
     }
 
     public String getNome() {

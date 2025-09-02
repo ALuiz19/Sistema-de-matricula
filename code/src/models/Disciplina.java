@@ -1,23 +1,26 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
-
 import models.enums.StatusDisciplina;
 
-public class Disciplina {
+public class Disciplina implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private static final int MAX_ALUNOS = 60;
     private static final int MIN_ALUNOS = 3;
 
     private String nome;
     private boolean obrigatorio;
-    private StatusDisciplina status = StatusDisciplina.AGUARDANDO;;
+    private Professor professor;
+    private StatusDisciplina status = StatusDisciplina.AGUARDANDO;
     private ArrayList<Aluno> alunos = new ArrayList<>();
 
     public Disciplina(String nome, boolean ehObrigatorio) {
         this.nome = nome;
         this.obrigatorio = ehObrigatorio;
+        this.professor = null;
     }
 
     public String encerraPeriodoMatricula() {
@@ -33,7 +36,7 @@ public class Disciplina {
     public void addAluno(Aluno aluno) {
         Objects.requireNonNull(aluno, "Aluno não pode ser nulo");
 
-        if (alunos.size() >= 60) {
+        if (alunos.size() >= MAX_ALUNOS) {
             throw new IllegalStateException("Quantidade máxima de alunos atingida.");
         }
 
@@ -80,5 +83,13 @@ public class Disciplina {
 
     public void setStatus(StatusDisciplina status) {
         this.status = status;
+    }
+
+    public Professor getProfessor() {
+        return professor;
+    }
+
+    public void setProfessor(Professor professor) {
+        this.professor = professor;
     }
 }

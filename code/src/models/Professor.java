@@ -1,21 +1,23 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Professor implements Usuario {
+public class Professor implements Usuario, Serializable {
 
+    private static final long serialVersionUID = 1L;
     private String nome;
     private String login;
     private String senha;
     private long numCadastro;
     private ArrayList<Disciplina> disciplinas;
 
-    public Professor(String nome, String login, String senha, long numCadastro, ArrayList<Disciplina> disciplinas) {
+    public Professor(String nome, String login, String senha, long numCadastro) {
         this.nome = nome;
         this.login = login;
         this.senha = senha;
         this.numCadastro = numCadastro;
-        this.disciplinas = disciplinas;
+        this.disciplinas = new ArrayList<>(); // Inicializa a lista
     }
 
     public ArrayList<Aluno> vizualizaAlunos(Disciplina disciplina) {
@@ -58,15 +60,23 @@ public class Professor implements Usuario {
         return disciplinas;
     }
 
-    public void addDiscplina(Disciplina disciplina) {
+    public void addDisciplina(Disciplina disciplina) {
+        if (disciplinas == null) {
+            disciplinas = new ArrayList<>();
+        }
         if (!disciplinas.contains(disciplina)) {
             disciplinas.add(disciplina);
         }
     }
 
     public void removeDisciplina(Disciplina disciplina) {
-        if (disciplinas.contains(disciplina)) {
+        if (disciplinas != null && disciplinas.contains(disciplina)) {
             disciplinas.remove(disciplina);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Professor: " + nome + " (Cadastro: " + numCadastro + ")";
     }
 }

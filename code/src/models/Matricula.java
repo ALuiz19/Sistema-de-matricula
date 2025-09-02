@@ -1,12 +1,13 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import models.enums.StatusMatricula;
 
-public class Matricula {
+public class Matricula implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private Aluno aluno;
     private Curso curso;
     private List<Disciplina> disciplinas = new ArrayList<>();
@@ -20,10 +21,19 @@ public class Matricula {
 
     public void addDisciplina(Disciplina d) {
         if (periodoAtivo && status == StatusMatricula.EFETIVADA) {
-            disciplinas.add(d);
             d.addAluno(aluno);
+            disciplinas.add(d);
         } else {
-            System.out.println("Não é possível adicionar disciplina (período inativo ou matrícula inválida).");
+            throw new IllegalStateException("Não é possível adicionar disciplina (período inativo ou matrícula inválida).");
+        }
+    }
+    
+    public void removeDisciplina(Disciplina d) {
+        if (periodoAtivo && status == StatusMatricula.EFETIVADA) {
+            d.removeAluno(aluno);
+            disciplinas.remove(d);
+        } else {
+            throw new IllegalStateException("Não é possível remover disciplina (período inativo ou matrícula inválida).");
         }
     }
 
@@ -43,15 +53,23 @@ public class Matricula {
     }
 
     public void notificarCobranca() {
-        // TODO: implementar
+        System.out.println("Sistema de cobranças notificado para o aluno: " + aluno.getNome());
     }
 
     public StatusMatricula getStatus() {
         return status;
     }
+    
+    public Curso getCurso(){
+        return this.curso;
+    }
+    
+    public List<Disciplina> getDisciplinas() {
+        return this.disciplinas;
+    }
 
     @Override
     public String toString() {
-        return "Matrícula do aluno " + aluno + " no curso " + curso + " - Status: " + status;
+        return "Matrícula do aluno " + aluno.getNome() + " no curso " + curso.getNome() + " - Status: " + status;
     }
 }

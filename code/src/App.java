@@ -57,7 +57,8 @@ public class App {
             System.out.println("1 - Gerenciar Alunos");
             System.out.println("2 - Gerenciar Professores");
             System.out.println("3 - Gerenciar Cursos e Disciplinas");
-            System.out.println("4 - Encerrar Período de Matrículas");
+            System.out.println("4 - Gerenciamento Administrativo");
+            System.out.println("5 - Encerrar Período de Matrículas");
             System.out.println("0 - Logout (Salvar e Sair)");
 
             int opc = lerOpcao();
@@ -73,6 +74,9 @@ public class App {
                     gerenciarCursosDisciplinas();
                     break;
                 case 4:
+                    gerenciamentoAdministrativo();
+                    break;
+                case 5:
                     encerrarPeriodoMatriculas();
                     break;
                 case 0:
@@ -141,6 +145,54 @@ public class App {
     }
 
     // Funcionalidades da Secretaria
+    private static void gerenciamentoAdministrativo() {
+        while (true) {
+            System.out.println("\n-- Gerenciamento Administrativo --");
+            System.out.println("1 - Cadastrar Novo Usuário da Secretaria");
+            System.out.println("2 - Listar Usuários da Secretaria");
+            System.out.println("0 - Voltar ao Menu Principal");
+    
+            int opc = lerOpcao();
+    
+            switch (opc) {
+                case 1:
+                    cadastrarNovaSecretaria();
+                    break;
+                case 2:
+                    listarSecretarias();
+                    break;
+                case 0:
+                    return;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        }
+    }
+
+    private static void cadastrarNovaSecretaria() {
+        System.out.print("Nome do novo usuário: ");
+        String nome = sc.nextLine();
+        System.out.print("Login: ");
+        String login = sc.nextLine();
+        System.out.print("Senha: ");
+        String senha = sc.nextLine();
+    
+        if (usuarios.stream().anyMatch(u -> u.getLogin().equals(login))) {
+            System.out.println("Erro: Já existe um usuário com este login.");
+            return;
+        }
+    
+        usuarios.add(new Secretaria(nome, senha, login));
+        System.out.println("Usuário da Secretaria cadastrado com sucesso!");
+    }
+    
+    private static void listarSecretarias() {
+        System.out.println("\n-- Lista de Usuários da Secretaria --");
+        usuarios.stream()
+                .filter(u -> u instanceof Secretaria)
+                .forEach(u -> System.out.println("- " + u.getNome() + " (Login: " + u.getLogin() + ")"));
+    }
+    
     private static void gerenciarAlunos() {
         while (true) {
             System.out.println("\n-- Gerenciar Alunos --");

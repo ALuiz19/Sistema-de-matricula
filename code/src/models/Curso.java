@@ -34,7 +34,6 @@ public class Curso implements Serializable {
         }
 
         disciplinas.remove(disciplina);
-
     }
 
     public String getNome() {

@@ -12,21 +12,23 @@ public class Disciplina implements Serializable {
 
     private String nome;
     private boolean obrigatorio;
+    private Professor professor;
     private StatusDisciplina status = StatusDisciplina.AGUARDANDO;
     private ArrayList<Aluno> alunos = new ArrayList<>();
 
     public Disciplina(String nome, boolean ehObrigatorio) {
         this.nome = nome;
         this.obrigatorio = ehObrigatorio;
+        this.professor = null;
     }
 
     public String encerraPeriodoMatricula() {
-        if (alunos.size() >= MIN_ALUNOS) {
+        if (alunos.size() >= MIN_ALUNOS && alunos.size() <= MAX_ALUNOS) {
             status = StatusDisciplina.ATIVA;
-            return "Ativa com " + alunos.size() + " alunos.";
+            return "Disciplina Ativa";
         } else {
             status = StatusDisciplina.INATIVA;
-            return "Cancelada por falta de alunos (Inscritos: " + alunos.size() + ").";
+            return "Disciplina Inativa";
         }
     }
 
@@ -34,7 +36,7 @@ public class Disciplina implements Serializable {
         Objects.requireNonNull(aluno, "Aluno não pode ser nulo");
 
         if (alunos.size() >= MAX_ALUNOS) {
-            throw new IllegalStateException("Quantidade máxima de alunos atingida ("+ MAX_ALUNOS +").");
+            throw new IllegalStateException("Quantidade máxima de alunos atingida.");
         }
 
         if (alunos.contains(aluno)) {
@@ -82,16 +84,11 @@ public class Disciplina implements Serializable {
         this.status = status;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Disciplina that = (Disciplina) o;
-        return nome.equals(that.nome);
+    public Professor getProfessor() {
+        return professor;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(nome);
+    public void setProfessor(Professor professor) {
+        this.professor = professor;
     }
 }

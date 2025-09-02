@@ -19,7 +19,6 @@ public class Curriculo implements Serializable {
         this.professores = new ArrayList<>();
         this.disciplinas = new ArrayList<>();
     }
-
     
     public void addAluno(Aluno aluno) {
         if (aluno != null && !alunos.contains(aluno)) {
@@ -62,6 +61,8 @@ public class Curriculo implements Serializable {
     public ArrayList<Professor> getProfessores() {
         return professores;
     }
+
+
 
     public ArrayList<Disciplina> getDisciplinas() {
         return disciplinas;

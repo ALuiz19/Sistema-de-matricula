@@ -1,8 +1,9 @@
 package models;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Secretaria implements Usuario {
+public class Secretaria implements Usuario, Serializable {
 
     private String nome;
     private String senha;
@@ -14,15 +15,8 @@ public class Secretaria implements Usuario {
         this.login = login;
     }
 
-    /**
-     * Cria um novo currículo para um semestre.
-     * @param dataInicio A data de início do semestre.
-     * @param dataFim A data de fim do semestre.
-     * @return um novo objeto Curriculo.
-     */
-    public Curriculo geraCurriculo(Date dataInicio, Date dataFim) {
-        System.out.println("Gerando currículo para o novo semestre.");
-        return new Curriculo(dataInicio, dataFim);
+    public Curriculo geraCurriculo() {
+        return new Curriculo(new Date(), new Date());
     }
 
     @Override
@@ -53,10 +47,5 @@ public class Secretaria implements Usuario {
     @Override
     public void setLogin(String login) {
         this.login = login;
-    }
-
-    @Override
-    public String toString() {
-        return "Secretaria: " + nome;
     }
 }

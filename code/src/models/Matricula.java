@@ -19,45 +19,26 @@ public class Matricula implements Serializable {
     }
 
     public void addDisciplina(Disciplina d) {
-        if (!periodoAtivo || status != StatusMatricula.EFETIVADA) {
-             throw new IllegalStateException("Período de matrículas está fechado ou sua matrícula não está ativa.");
+        if (periodoAtivo && status == StatusMatricula.EFETIVADA) {
+            d.addAluno(aluno);
+            disciplinas.add(d);
+        } else {
+            throw new IllegalStateException("Não é possível adicionar disciplina (período inativo ou matrícula inválida).");
         }
-        
-        long obrigatorias = disciplinas.stream().filter(Disciplina::isObrigatorio).count();
-        long optativas = disciplinas.size() - obrigatorias;
-
-        if (d.isObrigatorio() && obrigatorias >= 4) {
-            throw new IllegalStateException("Limite de 4 disciplinas obrigatórias atingido.");
-        }
-        if (!d.isObrigatorio() && optativas >= 2) {
-             throw new IllegalStateException("Limite de 2 disciplinas optativas atingido.");
-        }
-        
-        d.addAluno(aluno); // Lança exceção se a disciplina estiver cheia
-        disciplinas.add(d);
     }
     
     public void removeDisciplina(Disciplina d) {
-        if (!periodoAtivo) {
-            throw new IllegalStateException("Não é possível remover disciplinas fora do período de matrículas.");
-        }
-        if(disciplinas.contains(d)){
-            disciplinas.remove(d);
+        if (periodoAtivo && status == StatusMatricula.EFETIVADA) {
             d.removeAluno(aluno);
+            disciplinas.remove(d);
         } else {
-             throw new IllegalStateException("Você não está matriculado nesta disciplina.");
+            throw new IllegalStateException("Não é possível remover disciplina (período inativo ou matrícula inválida).");
         }
     }
-
 
     public void cancelarMatricula() {
         this.status = StatusMatricula.CANCELADA;
         this.periodoAtivo = false;
-        // Remove o aluno de todas as disciplinas em que estava inscrito
-        for (Disciplina d : disciplinas) {
-            d.removeAluno(aluno);
-        }
-        disciplinas.clear();
     }
 
     public void ativarPeriodo() {
@@ -71,23 +52,19 @@ public class Matricula implements Serializable {
     }
 
     public void notificarCobranca() {
-        System.out.println("--> [SISTEMA DE COBRANÇA]: Notificado para cobrar o aluno " + aluno.getNome() + " pelas disciplinas matriculadas.");
+        System.out.println("Sistema de cobranças notificado para o aluno: " + aluno.getNome());
     }
 
     public StatusMatricula getStatus() {
         return status;
     }
-
-    public Aluno getAluno() {
-        return aluno;
-    }
-
-    public Curso getCurso() {
-        return curso;
+    
+    public Curso getCurso(){
+        return this.curso;
     }
     
     public List<Disciplina> getDisciplinas() {
-        return disciplinas;
+        return this.disciplinas;
     }
 
     @Override

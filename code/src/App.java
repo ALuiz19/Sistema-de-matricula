@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import models.Aluno;
 import models.Curso;
@@ -84,7 +85,6 @@ public class App {
     }
 
     private static void menuAluno(Aluno aluno) {
-        // Verifica se o aluno já tem uma matrícula para o curso.
         if (aluno.getMatriculas() == null || aluno.getMatriculas().isEmpty()) {
              System.out.println("Você ainda não está matriculado em um curso. A secretaria precisa fazer isso.");
              return;
@@ -142,42 +142,117 @@ public class App {
 
     // Funcionalidades da Secretaria
     private static void gerenciarAlunos() {
-        System.out.println("1 - Cadastrar Aluno\n2 - Listar Alunos");
-        int opc = lerOpcao();
-        if (opc == 1) {
-            System.out.print("Nome do Aluno: ");
-            String nome = sc.nextLine();
-            System.out.print("Login: ");
-            String login = sc.nextLine();
-            System.out.print("Senha: ");
-            String senha = sc.nextLine();
-            System.out.print("Número de Matrícula: ");
-            long numMatricula = Long.parseLong(sc.nextLine());
-
-            Aluno novoAluno = new Aluno(nome, login, senha, numMatricula);
-            usuarios.add(novoAluno);
-            System.out.println("Aluno cadastrado com sucesso!");
-
-            System.out.println("Matricular aluno em um curso:");
-            listarCursos();
-            System.out.print("Escolha o número do curso: ");
-            int idxCurso = lerOpcao();
-            if(idxCurso >= 0 && idxCurso < cursos.size()){
-                Curso cursoEscolhido = cursos.get(idxCurso);
-                Matricula m = new Matricula(novoAluno, cursoEscolhido);
-                novoAluno.addMatricula(m);
-                System.out.println("Aluno matriculado no curso " + cursoEscolhido.getNome());
-            } else {
-                 System.out.println("Curso inválido.");
+        while (true) {
+            System.out.println("\n-- Gerenciar Alunos --");
+            System.out.println("1 - Cadastrar Novo Aluno (e matricular em curso)");
+            System.out.println("2 - Matricular Aluno Existente em Curso");
+            System.out.println("3 - Listar Alunos");
+            System.out.println("0 - Voltar ao Menu Principal");
+    
+            int opc = lerOpcao();
+    
+            switch (opc) {
+                case 1:
+                    cadastrarNovoAluno();
+                    break;
+                case 2:
+                    matricularAlunoExistente();
+                    break;
+                case 3:
+                    listarAlunos();
+                    break;
+                case 0:
+                    return;
+                default:
+                    System.out.println("Opção inválida!");
             }
-
-
-        } else if (opc == 2) {
-            System.out.println("\n-- Lista de Alunos --");
-            usuarios.stream()
-                    .filter(u -> u instanceof Aluno)
-                    .forEach(u -> System.out.println(((Aluno) u).toString()));
         }
+    }
+    
+    private static void cadastrarNovoAluno() {
+        System.out.print("Nome do Aluno: ");
+        String nome = sc.nextLine();
+        System.out.print("Login: ");
+        String login = sc.nextLine();
+        System.out.print("Senha: ");
+        String senha = sc.nextLine();
+        System.out.print("Número de Matrícula: ");
+        long numMatricula = Long.parseLong(sc.nextLine());
+    
+        Aluno novoAluno = new Aluno(nome, login, senha, numMatricula);
+        usuarios.add(novoAluno);
+        System.out.println("Aluno cadastrado com sucesso!");
+    
+        System.out.println("\nAgora, matricule o novo aluno em um curso.");
+        matricularAlunoEmCurso(novoAluno);
+    }
+    
+    private static void matricularAlunoExistente() {
+        System.out.println("\n-- Matricular Aluno Existente --");
+        List<Aluno> todosAlunos = usuarios.stream()
+                                        .filter(u -> u instanceof Aluno)
+                                        .map(u -> (Aluno) u)
+                                        .collect(Collectors.toList());
+    
+        if (todosAlunos.isEmpty()) {
+            System.out.println("Nenhum aluno cadastrado para matricular.");
+            return;
+        }
+    
+        System.out.println("Selecione o aluno:");
+        for (int i = 0; i < todosAlunos.size(); i++) {
+            Aluno a = todosAlunos.get(i);
+            String statusCurso = (a.getMatriculas() == null || a.getMatriculas().isEmpty()) ?
+                                 " (Sem curso)" :
+                                 " (Matriculado em " + a.getMatriculas().get(0).getCurso().getNome() + ")";
+            System.out.println(i + " - " + a.getNome() + statusCurso);
+        }
+        System.out.print("Escolha o número do aluno: ");
+        int idxAluno = lerOpcao();
+    
+        if (idxAluno >= 0 && idxAluno < todosAlunos.size()) {
+            Aluno alunoSelecionado = todosAlunos.get(idxAluno);
+            if (alunoSelecionado.getMatriculas() != null && !alunoSelecionado.getMatriculas().isEmpty()) {
+                System.out.println("Atenção: Este aluno já está matriculado. Uma nova matrícula substituirá a antiga.");
+            }
+            matricularAlunoEmCurso(alunoSelecionado);
+        } else {
+            System.out.println("Seleção de aluno inválida.");
+        }
+    }
+    
+    private static void matricularAlunoEmCurso(Aluno aluno) {
+        if (cursos.isEmpty()) {
+            System.out.println("Nenhum curso cadastrado. Crie um curso primeiro.");
+            return;
+        }
+    
+        System.out.println("\nSelecione o curso para matricular " + aluno.getNome() + ":");
+        listarCursos();
+        System.out.print("Escolha o número do curso: ");
+        int idxCurso = lerOpcao();
+    
+        if (idxCurso >= 0 && idxCurso < cursos.size()) {
+            Curso cursoEscolhido = cursos.get(idxCurso);
+            
+            // Limpa matrículas antigas para garantir uma matrícula principal
+            if (aluno.getMatriculas() != null) {
+                aluno.getMatriculas().clear();
+            }
+            
+            Matricula m = new Matricula(aluno, cursoEscolhido);
+            aluno.addMatricula(m);
+            System.out.println("Aluno(a) " + aluno.getNome() + " matriculado(a) com sucesso no curso " + cursoEscolhido.getNome() + "!");
+        } else {
+            System.out.println("Seleção de curso inválida.");
+        }
+    }
+    
+    private static void listarAlunos() {
+        System.out.println("\n-- Lista de Alunos --");
+        usuarios.stream()
+                .filter(u -> u instanceof Aluno)
+                .forEach(u -> System.out.println(((Aluno) u).toString()));
     }
 
     private static void gerenciarProfessores() {
@@ -315,7 +390,6 @@ public class App {
     private static void visualizarAlunosPorDisciplina(Professor professor) {
         System.out.println("\n-- Suas Disciplinas --");
         List<Disciplina> disciplinasProfessor = new ArrayList<>();
-        // Encontra as disciplinas do professor
         for(Curso c : cursos){
             for(Disciplina d : c.getDisciplinas()){
                 if(professor.getDisciplinas() != null && professor.getDisciplinas().contains(d)){

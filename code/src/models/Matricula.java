@@ -7,6 +7,7 @@ import models.enums.StatusMatricula;
 
 public class Matricula implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private Aluno aluno;
     private Curso curso;
     private List<Disciplina> disciplinas = new ArrayList<>();

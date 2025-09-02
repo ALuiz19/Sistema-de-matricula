@@ -7,6 +7,7 @@ import models.enums.StatusDisciplina;
 
 public class Disciplina implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private static final int MAX_ALUNOS = 60;
     private static final int MIN_ALUNOS = 3;
 

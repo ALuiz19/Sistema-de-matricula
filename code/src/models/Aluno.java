@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Aluno implements Usuario, Serializable {
-
+    
+    private static final long serialVersionUID = 1L; 
     private String login;
     private String senha;
     private String nome;

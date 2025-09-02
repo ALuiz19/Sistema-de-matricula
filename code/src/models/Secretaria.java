@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class Secretaria implements Usuario, Serializable {
 
+    private static final long serialVersionUID = 1L;
     private String nome;
     private String senha;
     private String login;

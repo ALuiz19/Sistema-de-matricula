@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import models.Aluno;
 import models.Curso;
+import models.Curriculo;
 import models.Disciplina;
 import models.Professor;
 import models.Secretaria;
@@ -16,12 +17,13 @@ public class App {
     private static Scanner sc = new Scanner(System.in);
     private static List<Usuario> usuarios = new ArrayList<>();
     private static List<Curso> cursos = new ArrayList<>();
+    private static List<Curriculo> curriculos = new ArrayList<>();
+    private static Curriculo curriculoAtivo = null;
     private static Matricula matriculaAtiva = null;
 
     public static void main(String[] args) {
         carregarDados();
 
-        // Adiciona um usuário da secretaria como padrão se não houver nenhum
         if (usuarios.stream().noneMatch(u -> u instanceof Secretaria)) {
             usuarios.add(new Secretaria("admin", "admin", "admin"));
         }
@@ -57,8 +59,9 @@ public class App {
             System.out.println("1 - Gerenciar Alunos");
             System.out.println("2 - Gerenciar Professores");
             System.out.println("3 - Gerenciar Cursos e Disciplinas");
-            System.out.println("4 - Gerenciamento Administrativo");
-            System.out.println("5 - Encerrar Período de Matrículas");
+            System.out.println("4 - Gerenciar Currículo do Semestre");
+            System.out.println("5 - Gerenciamento Administrativo");
+            System.out.println("6 - Encerrar Período de Matrículas");
             System.out.println("0 - Logout (Salvar e Sair)");
 
             int opc = lerOpcao();
@@ -74,9 +77,12 @@ public class App {
                     gerenciarCursosDisciplinas();
                     break;
                 case 4:
-                    gerenciamentoAdministrativo();
+                    gerenciarCurriculo();
                     break;
                 case 5:
+                    gerenciamentoAdministrativo();
+                    break;
+                case 6:
                     encerrarPeriodoMatriculas();
                     break;
                 case 0:
@@ -93,7 +99,7 @@ public class App {
              System.out.println("Você ainda não está matriculado em um curso. A secretaria precisa fazer isso.");
              return;
         }
-        matriculaAtiva = aluno.getMatriculas().get(0); // Simplificado para a primeira matrícula
+        matriculaAtiva = aluno.getMatriculas().get(0);
         matriculaAtiva.ativarPeriodo();
 
         while (true) {
@@ -145,6 +151,101 @@ public class App {
     }
 
     // Funcionalidades da Secretaria
+    private static void gerenciarCurriculo() {
+        while (true) {
+            System.out.println("\n-- Gerenciar Currículo --");
+            System.out.println("Currículo Ativo: " + (curriculoAtivo != null ? curriculoAtivo.getSemestre() : "Nenhum"));
+            System.out.println("1 - Criar Novo Currículo para Semestre");
+            System.out.println("2 - Definir Currículo Ativo");
+            System.out.println("3 - Adicionar Disciplinas ao Currículo Ativo");
+            System.out.println("4 - Ver Detalhes do Currículo Ativo");
+            System.out.println("0 - Voltar");
+
+            int opc = lerOpcao();
+
+            switch (opc) {
+                case 1:
+                    criarNovoCurriculo();
+                    break;
+                case 2:
+                    definirCurriculoAtivo();
+                    break;
+                case 3:
+                    adicionarDisciplinasAoCurriculoAtivo();
+                    break;
+                case 4:
+                    verDetalhesCurriculoAtivo();
+                    break;
+                case 0:
+                    return;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        }
+    }
+
+    private static void criarNovoCurriculo() {
+        System.out.print("Digite o nome do semestre (ex: 2025.2): ");
+        String semestre = sc.nextLine();
+        if (curriculos.stream().anyMatch(c -> c.getSemestre().equalsIgnoreCase(semestre))) {
+            System.out.println("Erro: Já existe um currículo para este semestre.");
+            return;
+        }
+        Curriculo novoCurriculo = new Curriculo(semestre);
+        curriculos.add(novoCurriculo);
+        System.out.println("Currículo para " + semestre + " criado com sucesso!");
+    }
+
+    private static void definirCurriculoAtivo() {
+        if (curriculos.isEmpty()) {
+            System.out.println("Nenhum currículo foi criado ainda.");
+            return;
+        }
+        System.out.println("Selecione o currículo para ativar:");
+        for (int i = 0; i < curriculos.size(); i++) {
+            System.out.println(i + " - " + curriculos.get(i).getSemestre());
+        }
+        int idx = lerOpcao();
+        if (idx >= 0 && idx < curriculos.size()) {
+            curriculoAtivo = curriculos.get(idx);
+            System.out.println("Currículo " + curriculoAtivo.getSemestre() + " definido como ativo.");
+        } else {
+            System.out.println("Seleção inválida.");
+        }
+    }
+
+    private static void adicionarDisciplinasAoCurriculoAtivo() {
+        if (curriculoAtivo == null) {
+            System.out.println("Nenhum currículo ativo definido. Defina um primeiro.");
+            return;
+        }
+        while (true) {
+            System.out.println("\nAdicionando disciplinas para o currículo " + curriculoAtivo.getSemestre());
+            Disciplina d = selecionarDisciplina();
+            if (d != null) {
+                curriculoAtivo.addDisciplina(d);
+                System.out.println("Disciplina '" + d.getNome() + "' adicionada.");
+            }
+            System.out.print("Adicionar outra disciplina? (s/n): ");
+            if (sc.nextLine().equalsIgnoreCase("n")) {
+                break;
+            }
+        }
+    }
+
+    private static void verDetalhesCurriculoAtivo() {
+        if (curriculoAtivo == null) {
+            System.out.println("Nenhum currículo ativo definido.");
+            return;
+        }
+        System.out.println("\n-- Detalhes do Currículo: " + curriculoAtivo.getSemestre() + " --");
+        if (curriculoAtivo.getDisciplinas().isEmpty()) {
+            System.out.println("Nenhuma disciplina adicionada a este currículo.");
+        } else {
+            curriculoAtivo.getDisciplinas().forEach(d -> System.out.println("- " + d.getNome()));
+        }
+    }
+
     private static void gerenciamentoAdministrativo() {
         while (true) {
             System.out.println("\n-- Gerenciamento Administrativo --");
@@ -440,9 +541,18 @@ public class App {
 
     // Funcionalidades do Aluno
     private static void matricularEmDisciplina(Aluno aluno) {
-        System.out.println("\n-- Disciplinas Disponíveis --");
-        Curso cursoDoAluno = matriculaAtiva.getCurso();
-        ArrayList<Disciplina> disciplinasDisponiveis = cursoDoAluno.getDisciplinas();
+        if (curriculoAtivo == null) {
+            System.out.println("O período de matrículas não está aberto (nenhum currículo ativo).");
+            return;
+        }
+
+        System.out.println("\n-- Disciplinas Disponíveis para o semestre " + curriculoAtivo.getSemestre() + " --");
+        ArrayList<Disciplina> disciplinasDisponiveis = curriculoAtivo.getDisciplinas();
+        
+        if(disciplinasDisponiveis.isEmpty()){
+            System.out.println("Nenhuma disciplina disponível no currículo atual.");
+            return;
+        }
 
         for (int i = 0; i < disciplinasDisponiveis.size(); i++) {
             Disciplina d = disciplinasDisponiveis.get(i);
@@ -644,13 +754,16 @@ public class App {
             }
         }
     }
-
-    // Persistência
+    
     private static void carregarDados() {
         Object[] dados = SistemaDAO.carregarDados();
         if (dados != null) {
             usuarios = (List<Usuario>) dados[0];
             cursos = (List<Curso>) dados[1];
+            curriculos = (List<Curriculo>) dados[2];
+            if (!curriculos.isEmpty()) {
+                curriculoAtivo = curriculos.get(curriculos.size() -1); // Define o último currículo como ativo por padrão
+            }
             System.out.println("Dados carregados com sucesso.");
         } else {
             System.out.println("Nenhum dado encontrado. Iniciando um novo sistema.");
@@ -658,7 +771,7 @@ public class App {
     }
 
     private static void salvarDados() {
-        SistemaDAO.salvarDados(usuarios, cursos);
+        SistemaDAO.salvarDados(usuarios, cursos, curriculos);
         System.out.println("Dados salvos com sucesso. Encerrando.");
     }
 }

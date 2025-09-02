@@ -2,69 +2,32 @@ package models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Curriculo implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private Date dataInicio;
-    private Date dataFim;
-    private ArrayList<Aluno> alunos;
-    private ArrayList<Professor> professores;
+    private String semestre;
     private ArrayList<Disciplina> disciplinas;
 
-    public Curriculo(Date dataInicio, Date dataFim) {
-        this.dataInicio = dataInicio;
-        this.dataFim = dataFim;
-        this.alunos = new ArrayList<>();
-        this.professores = new ArrayList<>();
+    public Curriculo(String semestre) {
+        this.semestre = semestre;
         this.disciplinas = new ArrayList<>();
     }
     
-    public void addAluno(Aluno aluno) {
-        if (aluno != null && !alunos.contains(aluno)) {
-            alunos.add(aluno);
-        }
-    }
-
-    public void addProfessor(Professor professor) {
-        if (professor != null && !professores.contains(professor)) {
-            professores.add(professor);
-        }
-    }
-
     public void addDisciplina(Disciplina disciplina) {
         if (disciplina != null && !disciplinas.contains(disciplina)) {
             disciplinas.add(disciplina);
         }
     }
 
-    public Date getDataInicio() {
-        return dataInicio;
+    public String getSemestre() {
+        return semestre;
     }
 
-    public void setDataInicio(Date dataInicio) {
-        this.dataInicio = dataInicio;
+    public void setSemestre(String semestre) {
+        this.semestre = semestre;
     }
-
-    public Date getDataFim() {
-        return dataFim;
-    }
-
-    public void setDataFim(Date dataFim) {
-        this.dataFim = dataFim;
-    }
-
-    public ArrayList<Aluno> getAlunos() {
-        return alunos;
-    }
-
-    public ArrayList<Professor> getProfessores() {
-        return professores;
-    }
-
-
-
+    
     public ArrayList<Disciplina> getDisciplinas() {
         return disciplinas;
     }
